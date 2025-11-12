@@ -1,0 +1,94 @@
+name: Sales_Forecasting
+
+services:
+  postgresql:
+    image: postgres:17
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+      - ./postgresql/postgresql.conf:/etc/postgresql/postgresql.conf
+      - ./postgresql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    command: ["postgres", "-c", "config_file=/etc/postgresql/postgresql.conf"]
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  inference-server:
+    build:
+      context: ./inference-server
+      dockerfile: Dockerfile
+    ports:
+      - "${FASTAPI_PORT}:8000"
+    environment:
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      AWS_REGION: ${AWS_REGION}
+      DATABASE_URI: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgresql:${POSTGRES_PORT}/v2
+      MLFLOW_TRACKING_URI: http://mlflow:${MLFLOW_PORT}
+      MLFLOW_S3_ENDPOINT_URL: ${MLFLOW_S3_ENDPOINT_URL}
+      PORT: ${FASTAPI_PORT}
+    volumes:
+      - ./inference-server/accounts.toml:/app/accounts.toml
+    depends_on:
+      postgresql:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  mlflow:
+    image: ghcr.io/mlflow/mlflow:v3.6.0
+    container_name: sales_forecasting-mlflow
+    ports:
+      - "${MLFLOW_PORT}:5000"
+    environment:
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      AWS_REGION: ${AWS_REGION}
+      MLFLOW_S3_ENDPOINT_URL: ${MLFLOW_S3_ENDPOINT_URL}
+    depends_on:
+      postgresql:
+        condition: service_healthy
+      rustfs:
+        condition: service_started
+    command: >
+      sh -c "pip install --no-cache-dir psycopg2-binary boto3 &&
+            mlflow server
+            --host 0.0.0.0
+            --backend-store-uri postgresql://root:postgres@postgresql:5432/mlflow
+            --default-artifact-root s3://nkust-ic-models/mlflow-blobs/"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+  rustfs:
+    image: rustfs/rustfs:latest
+    ports:
+      - "${RUSTFS_WEB_PORT}:9000"
+      - "${RUSTFS_ADMIN_PORT}:9001"
+    environment:
+      RUSTFS_ACCESS_KEY: ${RUSTFS_ACCESS_KEY}
+      RUSTFS_SECRET_KEY: ${RUSTFS_SECRET_KEY}
+      RUSTFS_DOMAIN: ${RUSTFS_DOMAIN}
+    volumes:
+      - rustfs_data:/data
+    restart: unless-stopped
+
+volumes:
+  pg_data:
+  rustfs_data:
