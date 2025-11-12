@@ -56,7 +56,6 @@
 
 * **sales-auto-ml**：模型訓練、AutoML、自動排程與結果分析。
 * **inference-server**：模型推論 API，供外部應用呼叫預測。
-  
 
 ---
 
@@ -82,7 +81,7 @@ Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
 
 此腳本將自動：
 
-- 建立 conda 環境與安裝依賴套件。
+- 安裝依賴套件。
 - 啟動 MLflow、Inference Server 與 PostgreSQL。
 - 建立預設資料表與結構。
 
@@ -133,7 +132,7 @@ Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
 
 ---
 
-## 🧩 6. 問題排除
+## 🧩5 . 問題排除
 
 | 問題                    | 可能原因         | 解決方式                              |
 | ----------------------- | ---------------- | ------------------------------------- |
