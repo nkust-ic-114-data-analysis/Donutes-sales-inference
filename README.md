@@ -73,6 +73,13 @@ Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
 
 ## 🌱 3. 設定環境變數與啟動服務
 
+### 3.1 設定環境變數
+
+在首次啟動前，請先設定環境參數檔 .env。
+請在專案根目錄建立 .env 檔案（若已存在則可直接修改
+
+### 3.2 啟動服務
+
 進入專案目錄後執行：
 
 ```powershell
