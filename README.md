@@ -15,23 +15,50 @@
 
 1. 安裝時**勾選「Add Python to PATH」**。
 2. 開啟 **VSCode 終端機**，執行以下指令確認版本：
-
+   
    ```powershell
    python --version
    ```
 3. 安裝 **uv 套件管理工具**：
-
+   
    ```powershell
    pip install uv
    ```
 4. 驗證安裝是否成功：
-
+   
    ```powershell
    uv --version
    ```
 
----
+### 1.2 下載專案原始碼
 
+請使用 **Git** 下載主要服務專案：
+
+1. 開啟終端機並切換至欲存放專案的資料夾。
+2. 執行以下指令以下載 **Sales AutoML** 專案：
+   
+   ```powershell
+   git clone https://github.com/your-org/sales-auto-ml.git
+   ```
+3. 接著下載 **Inference Server** 專案：
+   
+   ```powershell
+   git clone https://github.com/your-org/inference-server.git
+   ```
+4. 下載完成後，請確認兩個專案資料夾皆存在：
+   
+   ```
+   sales-auto-ml/
+   inference-server/
+   ```
+
+這兩個專案將分別負責：
+
+* **sales-auto-ml**：模型訓練、AutoML、自動排程與結果分析。
+* **inference-server**：模型推論 API，供外部應用呼叫預測。
+  
+
+---
 
 ## 🖥️ 2. 設定 PowerShell 腳本執行權限
 
@@ -115,3 +142,4 @@ Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
 | MLflow 無法連線         | Conda 環境未啟動 | 重新執行 `conda activate `          |
 
 ---
+
