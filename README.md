@@ -7,14 +7,13 @@
 * **Git**：用於版本控制與下載專案原始碼。
 * **Python (3.11 以上版本)**：作為主要執行環境。
 * **uv 套件管理工具**：用於快速建立隔離環境與安裝依賴。
-* **Visual Studio Code (VSCode)**：用於程式開發與偵錯。
 
 ### 1.1 設定系統環境變數
 
 安裝完成 Python 後，請確認以下步驟：
 
 1. 安裝時**勾選「Add Python to PATH」**。
-2. 開啟 **VSCode 終端機**，執行以下指令確認版本：
+2. 開啟 **終端機**，執行以下指令確認版本：
    
    ```powershell
    python --version
@@ -145,7 +144,6 @@ Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
 | ----------------------- | ---------------- | ------------------------------------- |
 | PowerShell 無法執行腳本 | 執行政策未設定   | 重新執行 `Set-ExecutionPolicy` 指令 |
 | PostgreSQL 無法啟動     | Port 被占用      | 停用其他使用 5432 埠的服務            |
-| MLflow 無法連線         | Conda 環境未啟動 | 重新執行 `conda activate `          |
 
 ---
 

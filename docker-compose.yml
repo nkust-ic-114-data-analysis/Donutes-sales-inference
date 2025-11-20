@@ -63,21 +63,29 @@ services:
         condition: service_healthy
       rustfs:
         condition: service_started
-    command: >
-      sh -c "pip install --no-cache-dir psycopg2-binary boto3 &&
-            mlflow server
-            --host 0.0.0.0
-            --backend-store-uri postgresql://root:postgres@postgresql:5432/mlflow
-            --default-artifact-root s3://nkust-ic-models/mlflow-blobs/"
+    command:
+          - sh
+          - -c
+          - |
+            pip install --no-cache-dir psycopg2-binary boto3
+            
+            echo "--- Starting MLflow Server with custom config ---"
+            
+            mlflow server \
+              --host 0.0.0.0 \
+              --backend-store-uri postgresql://root:postgres@postgresql:5432/mlflow \
+              --default-artifact-root s3://nkust-ic-models/mlflow-blobs/
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5000"]
-      interval: 15s
+      interval: 25s
       timeout: 5s
       retries: 5
+      start_period: 15s   
 
   rustfs:
     image: rustfs/rustfs:latest
+    user: "0:0" 
     ports:
       - "${RUSTFS_WEB_PORT}:9000"
       - "${RUSTFS_ADMIN_PORT}:9001"
