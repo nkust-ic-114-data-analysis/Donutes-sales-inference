@@ -96,7 +96,39 @@ services:
     volumes:
       - rustfs_data:/data
     restart: unless-stopped
+  open-meteo-proxy:
+    build:
+      context: ./open-meteo-proxy
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+      - "3001:3001"
+    environment: {}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "3000"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
+  open-meteo-proxy-storage:
+    image: redis/redis-stack-server:latest
+    ports:
+      - "6379:6379"
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-defaultpassword}
+      REDIS_ARGS: "--requirepass ${REDIS_PASSWORD:-defaultpassword}"
+    volumes:
+      - redis_data:/data
+      - ./redis/redis-stack.conf:/usr/local/etc/redis/redis.conf
+    command: ["redis-server", "/etc/redis-stack.conf", "--requirepass", "${REDIS_PASSWORD:-defaultpassword}"]
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD:-defaultpassword}", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 volumes:
   pg_data:
   rustfs_data:
+  redis_data:
