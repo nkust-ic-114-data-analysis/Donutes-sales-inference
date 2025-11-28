@@ -30,7 +30,7 @@
    uv --version
    ```
 
-### 1.2 下載專案原始碼
+### 1.2 下載專案及快取伺服器原始碼
 
 請使用 **Git** 下載主要服務專案：
 
@@ -45,18 +45,27 @@
    ```powershell
    git clone https://github.com/your-org/inference-server.git
    ```
-4. 下載完成後，請確認兩個專案資料夾皆存在：
+4. 接著下載 **open-meteo-proxy** 專案：
+   
+   ```powershell
+   git clone https://github.com/your-org/open-meteo-proxy.git
+   ```
+4. 下載完成後，請確認三個資料夾皆存在：
    
    ```
    sales-auto-ml/
    inference-server/
+   open-meteo-proxy/
    ```
 
 這兩個專案將分別負責：
 
 * **sales-auto-ml**：模型訓練、AutoML、自動排程與結果分析。
 * **inference-server**：模型推論 API，供外部應用呼叫預測。
+* **open-meteo-proxy**：open-meteo 的結果快取 12 小時並進行請求去重，避免超過 open-meteo 的使用限制。
 
+
+  
 ---
 
 ## 🖥️ 2. 設定 PowerShell 腳本執行權限
