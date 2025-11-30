@@ -87,7 +87,12 @@ Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
 在首次啟動前，請先設定環境參數檔 .env。
 請在專案根目錄建立 .env 檔案（若已存在則可直接修改
 
-### 3.2 啟動服務
+## 3.2 設定server 憑證
+
+進入 inference-server資料夾
+請在專案根目錄建立 accounts.toml 檔案（若已存在則可直接修改
+
+### 3.3 啟動服務
 
 進入專案目錄後執行：
 
@@ -106,6 +111,24 @@ Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
 - **MLflow**：模型訓練與實驗管理平台。
 - **Inference Server**：模型推論 API 伺服器。
 - **PostgreSQL**：資料庫服務，用於儲存訓練紀錄與系統設定。
+
+### 3.4 申請金鑰和設定空間
+
+請前往 Rufs 平台申請金鑰與 Bucket，並更改 .env ：
+```powershell
+RUFS_ACCESS_KEY=xxxx
+RUFS_SECRET_KEY=xxxx
+MLFLOW_ARTIFACT_ROOT=xxxxxxx
+```
+### 3.5 重啟 inference-server 和 mlflow
+
+
+``` powershell
+docker compose up -d --build inference-server
+docker compose up -d --build mlflow
+```
+
+
 
 📌 **執行完成後，所有主要服務將自動運作。**
 
