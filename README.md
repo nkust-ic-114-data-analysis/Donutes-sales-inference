@@ -114,20 +114,19 @@ Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
 
 ### 3.4 申請金鑰和設定空間
 
-請前往 Rufs 平台申請金鑰與 Bucket，並更改 .env ：
+請將以下剛設定的環境變數，填入 Rufs 平台對應的金鑰與 Bucket 配置欄位：
 ```powershell
-RUFS_ACCESS_KEY=xxxx
-RUFS_SECRET_KEY=xxxx
-MLFLOW_ARTIFACT_ROOT=xxxxxxx
+AWS_ACCESS_KEY_ID=xxxxxxx
+AWS_SECRET_ACCESS_KEY=xxxxxxx
+BUCKET_NAME=xxxxxxx
 ```
-### 3.5 重啟 inference-server 和 mlflow
 
+```powershell
+若偵測到以下服務連線異常，請重新啟動 inference-server 與 mlflow：
 
-``` powershell
 docker compose up -d --build inference-server
 docker compose up -d --build mlflow
 ```
-
 
 
 📌 **執行完成後，所有主要服務將自動運作。**
