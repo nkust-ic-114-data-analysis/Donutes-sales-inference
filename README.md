@@ -121,9 +121,9 @@ AWS_SECRET_ACCESS_KEY=xxxxxxx
 BUCKET_NAME=xxxxxxx
 ```
 
-```powershell
-若偵測到以下服務連線異常，請重新啟動 inference-server 與 mlflow：
 
+⚠️若偵測到以下服務連線異常，請重新啟動 inference-server 與 mlflow：
+```powershell
 docker compose up -d --build inference-server
 docker compose up -d --build mlflow
 ```
